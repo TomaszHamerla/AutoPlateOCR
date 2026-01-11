@@ -23,11 +23,7 @@ public class PlateProcessingService {
 
     public PlateProcessingService() {
         OpenCV.loadLocally();
-
         this.plateDetector = new CascadeClassifier("haarcascade_plate.xml");
-        if (this.plateDetector.empty()) {
-            throw new RuntimeException("Nie udało się załadować haarcascade_plate.xml! Sprawdź czy plik jest w katalogu projektu.");
-        }
 
         this.tesseract = new Tesseract();
         this.tesseract.setDatapath("tessdata");
@@ -39,11 +35,17 @@ public class PlateProcessingService {
         Mat src = Imgcodecs.imread(imageFile.getAbsolutePath());
         if (src.empty()) return "";
 
+        double scale = 1.0;
+        if (src.width() > 1000) {
+            scale = 800.0 / src.width();
+            Imgproc.resize(src, src, new Size(src.width() * scale, src.height() * scale));
+        }
+
         Mat gray = new Mat();
         Imgproc.cvtColor(src, gray, Imgproc.COLOR_BGR2GRAY);
 
         MatOfRect plates = new MatOfRect();
-        plateDetector.detectMultiScale(gray, plates, 1.1, 3, 0, new Size(30, 30), new Size());
+        plateDetector.detectMultiScale(gray, plates, 1.1, 3, 0, new Size(20, 20), new Size());
 
         Rect[] platesArray = plates.toArray();
         String bestResult = "";
@@ -56,26 +58,23 @@ public class PlateProcessingService {
 
             Mat cropped = new Mat(src, bestRect);
 
-            Mat resized = new Mat();
-            Imgproc.resize(cropped, resized, new Size(), 2.0, 2.0, Imgproc.INTER_CUBIC);
             Mat binary = new Mat();
-            Imgproc.cvtColor(resized, binary, Imgproc.COLOR_BGR2GRAY);
+            Imgproc.cvtColor(cropped, binary, Imgproc.COLOR_BGR2GRAY);
             Imgproc.threshold(binary, binary, 0, 255, Imgproc.THRESH_BINARY | Imgproc.THRESH_OTSU);
 
             bestResult = performOcr(matToBufferedImage(binary));
-        } else {
-            bestResult = performOcr(matToBufferedImage(gray));
         }
 
-        src.release(); gray.release();
+        src.release();
+        gray.release();
 
         return bestResult;
     }
 
     private String performOcr(BufferedImage img) {
         try {
-            String result = tesseract.doOCR(img);
-            return result.replaceAll("[^A-Z0-9]", "").trim();
+            String txt = tesseract.doOCR(img);
+            return txt.replaceAll("[^A-Z0-9]", "").trim();
         } catch (TesseractException e) {
             return "";
         }
@@ -87,7 +86,7 @@ public class PlateProcessingService {
         try {
             return ImageIO.read(new ByteArrayInputStream(mob.toArray()));
         } catch (Exception e) {
-            throw new RuntimeException("Błąd konwersji obrazu", e);
+            return null;
         }
     }
 }

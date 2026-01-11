@@ -16,8 +16,7 @@ public class DatasetHelper {
         Map<String, String> groundTruthMap = new HashMap<>();
 
         try {
-            System.out.println("Wczytywanie adnotacji z: " + xmlFile.getAbsolutePath());
-
+            System.out.println("Wczytywanie XML: " + xmlFile.getAbsolutePath());
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
             Document doc = dBuilder.parse(xmlFile);
@@ -25,62 +24,35 @@ public class DatasetHelper {
 
             NodeList imageNodes = doc.getElementsByTagName("image");
 
-            if (imageNodes.getLength() > 0) {
-                System.out.println("Wykryto format oparty na tagach <image> (np. CVAT).");
-                for (int i = 0; i < imageNodes.getLength(); i++) {
-                    Element imageElement = (Element) imageNodes.item(i);
-                    String fileName = imageElement.getAttribute("name");
+            for (int i = 0; i < imageNodes.getLength(); i++) {
+                Element imageElement = (Element) imageNodes.item(i);
+                String fileName = imageElement.getAttribute("name");
 
-                    NodeList boxNodes = imageElement.getElementsByTagName("box");
-                    if (boxNodes.getLength() > 0) {
-                        Element boxElement = (Element) boxNodes.item(0);
-                        String label = boxElement.getAttribute("label");
+                NodeList boxNodes = imageElement.getElementsByTagName("box");
+                if (boxNodes.getLength() > 0) {
+                    Element boxElement = (Element) boxNodes.item(0);
 
-                        if (label == null || label.isEmpty()) {
-                        }
+                    NodeList attributes = boxElement.getElementsByTagName("attribute");
+                    String plateNumber = "";
 
-                        if (fileName != null && !fileName.isEmpty() && label != null && !label.isEmpty()) {
-                            File f = new File(fileName);
-                            groundTruthMap.put(f.getName(), label);
+                    for (int k = 0; k < attributes.getLength(); k++) {
+                        Element attr = (Element) attributes.item(k);
+                        if ("plate number".equals(attr.getAttribute("name"))) {
+                            plateNumber = attr.getTextContent().trim();
+                            break;
                         }
                     }
-                }
-            } else {
-                System.out.println("Brak tagów <image>, próba formatu standardowego <annotation>...");
-                NodeList annotationNodes = doc.getElementsByTagName("annotation");
 
-                for (int i = 0; i < annotationNodes.getLength(); i++) {
-                    Element annotation = (Element) annotationNodes.item(i);
-
-                    String fileName = getTagValue(annotation, "filename");
-                    String plate = "";
-
-                    NodeList objects = annotation.getElementsByTagName("object");
-                    if (objects.getLength() > 0) {
-                        Element obj = (Element) objects.item(0);
-                        plate = getTagValue(obj, "name");
-                    }
-
-                    if (fileName != null && plate != null && !plate.isEmpty()) {
-                        groundTruthMap.put(fileName, plate);
+                    if (!plateNumber.isEmpty() && fileName != null) {
+                        groundTruthMap.put(fileName, plateNumber);
                     }
                 }
             }
-
-            System.out.println("Załadowano " + groundTruthMap.size() + " adnotacji do pamięci.");
+            System.out.println("Poprawnie załadowano " + groundTruthMap.size() + " tablic z pliku XML.");
 
         } catch (Exception e) {
             e.printStackTrace();
-            System.err.println("Błąd podczas parsowania pliku XML: " + e.getMessage());
         }
         return groundTruthMap;
-    }
-
-    private static String getTagValue(Element element, String tagName) {
-        NodeList nodeList = element.getElementsByTagName(tagName);
-        if (nodeList != null && nodeList.getLength() > 0) {
-            return nodeList.item(0).getTextContent();
-        }
-        return null;
     }
 }
