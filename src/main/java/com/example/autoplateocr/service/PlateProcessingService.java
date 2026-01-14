@@ -1,92 +1,81 @@
 package com.example.autoplateocr.service;
 
-import net.sourceforge.tess4j.ITesseract;
-import net.sourceforge.tess4j.Tesseract;
-import net.sourceforge.tess4j.TesseractException;
-import nu.pattern.OpenCV;
-import org.opencv.core.*;
-import org.opencv.imgcodecs.Imgcodecs;
-import org.opencv.imgproc.Imgproc;
-import org.opencv.objdetect.CascadeClassifier;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
 import org.springframework.stereotype.Service;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.File;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class PlateProcessingService {
 
-    private final ITesseract tesseract;
-    private final CascadeClassifier plateDetector;
+    private Process pythonProcess;
+    private BufferedReader reader;
+    private BufferedWriter writer;
 
-    public PlateProcessingService() {
-        OpenCV.loadLocally();
-        this.plateDetector = new CascadeClassifier("haarcascade_plate.xml");
+    @PostConstruct
+    public void init() {
+        try {
+            System.out.println(">>> Uruchamianie silnika Python OCR...");
 
-        this.tesseract = new Tesseract();
-        this.tesseract.setDatapath("tessdata");
-        this.tesseract.setLanguage("eng");
-        this.tesseract.setTessVariable("tessedit_char_whitelist", "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789");
+            ProcessBuilder pb = new ProcessBuilder("python", "ocr_server.py");
+            pb.redirectErrorStream(true); // Przekieruj błędy do standardowego wyjścia
+            this.pythonProcess = pb.start();
+
+            this.reader = new BufferedReader(new InputStreamReader(pythonProcess.getInputStream()));
+            this.writer = new BufferedWriter(new OutputStreamWriter(pythonProcess.getOutputStream()));
+
+            // Czekamy na sygnał "READY" od Pythona
+            String line = reader.readLine();
+            if ("READY".equals(line)) {
+                System.out.println(">>> Silnik OCR gotowy do pracy!");
+            } else {
+                throw new RuntimeException("Python zwrócił błąd przy starcie: " + line);
+            }
+
+        } catch (IOException e) {
+            throw new RuntimeException("Nie udało się uruchomić skryptu Pythona. Sprawdź czy masz 'python' w PATH i zainstalowane biblioteki.", e);
+        }
     }
 
     public String processImage(File imageFile) {
-        Mat src = Imgcodecs.imread(imageFile.getAbsolutePath());
-        if (src.empty()) return "";
+        if (!imageFile.exists() || writer == null) return "";
 
-        double scale = 1.0;
-        if (src.width() > 1000) {
-            scale = 800.0 / src.width();
-            Imgproc.resize(src, src, new Size(src.width() * scale, src.height() * scale));
-        }
-
-        Mat gray = new Mat();
-        Imgproc.cvtColor(src, gray, Imgproc.COLOR_BGR2GRAY);
-
-        MatOfRect plates = new MatOfRect();
-        plateDetector.detectMultiScale(gray, plates, 1.1, 3, 0, new Size(20, 20), new Size());
-
-        Rect[] platesArray = plates.toArray();
-        String bestResult = "";
-
-        if (platesArray.length > 0) {
-            Rect bestRect = platesArray[0];
-            for (Rect r : platesArray) {
-                if (r.area() > bestRect.area()) bestRect = r;
-            }
-
-            Mat cropped = new Mat(src, bestRect);
-
-            Mat binary = new Mat();
-            Imgproc.cvtColor(cropped, binary, Imgproc.COLOR_BGR2GRAY);
-            Imgproc.threshold(binary, binary, 0, 255, Imgproc.THRESH_BINARY | Imgproc.THRESH_OTSU);
-
-            bestResult = performOcr(matToBufferedImage(binary));
-        }
-
-        src.release();
-        gray.release();
-
-        return bestResult;
-    }
-
-    private String performOcr(BufferedImage img) {
         try {
-            String txt = tesseract.doOCR(img);
-            return txt.replaceAll("[^A-Z0-9]", "").trim();
-        } catch (TesseractException e) {
+            // 1. Wysyłamy ścieżkę do Pythona
+            writer.write(imageFile.getAbsolutePath());
+            writer.newLine(); // Koniec linii to sygnał "wykonaj"
+            writer.flush();
+
+            // 2. Czekamy na odpowiedź (jedna linia)
+            String result = reader.readLine();
+
+            if (result == null || "NONE".equals(result) || result.startsWith("ERROR")) {
+                return "";
+            }
+            return result;
+
+        } catch (IOException e) {
+            e.printStackTrace();
             return "";
         }
     }
 
-    private BufferedImage matToBufferedImage(Mat matrix) {
-        MatOfByte mob = new MatOfByte();
-        Imgcodecs.imencode(".png", matrix, mob);
+    @PreDestroy
+    public void cleanup() {
         try {
-            return ImageIO.read(new ByteArrayInputStream(mob.toArray()));
+            if (writer != null) {
+                writer.write("EXIT");
+                writer.newLine();
+                writer.flush();
+            }
+            if (pythonProcess != null) {
+                pythonProcess.destroy();
+            }
         } catch (Exception e) {
-            return null;
+            // ignore
         }
     }
 }
