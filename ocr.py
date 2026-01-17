@@ -324,7 +324,7 @@ def calculate_final_grade(accuracy_percent, processing_time_sec):
 def run_test_mode():
     """Run performance test on local image dataset"""
     print("\n" + "="*60)
-    print("OCR - LOCAL TEST MODE")
+    print("Start spring(python)")
     print("="*60)
 
     if not os.path.exists(ANNOTATIONS_FILE):
@@ -334,9 +334,6 @@ def run_test_mode():
         print(f"ERROR: Images directory not found: {IMAGES_DIR}")
         sys.exit(1)
 
-    print(f"Annotations: {ANNOTATIONS_FILE}")
-    print(f"Images dir: {IMAGES_DIR}")
-    print(f"Temp directory: {TEMP_BASE}")
 
     all_data = load_data_from_xml(ANNOTATIONS_FILE)
     if not all_data:
@@ -437,10 +434,6 @@ def run_test_mode():
     print(f"Speed:         {time_per_100:.2f} sec / 100 images")
     print(f"Grade:         {calculate_final_grade(accuracy, time_per_100):.1f}")
     print("="*60)
-    print(f"\nLogs saved to:")
-    print(f"  - Errors: {LOG_FILE_NAME}")
-    print(f"  - Full:   {FULL_LOG_FILE}")
-    print(f"  - Debug:  {DEBUG_DIR}")
 
 if __name__ == "__main__":
     run_test_mode()
