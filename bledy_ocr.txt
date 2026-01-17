@@ -1,43 +1,43 @@
 ERROR LOG
 FILENAME                       | EXPECTED     | DETECTED     | STATUS
 --------------------------------------------------------------------------------
-91.jpg                         | KOS0163G     | KOS01636     | FAIL (Errors: G->6)
-154.jpg                        | SG2947W      | SG2947N      | FAIL (Errors: W->N)
-102.jpg                        | SZA92043     | Z920431      | FAIL
-12.jpg                         | SK293VV      |              | FAIL
 55.jpg                         | SK3694W      | SK3694H      | FAIL (Errors: W->H)
-8.jpg                          | ST8936T      | ST89361      | FAIL (Errors: T->1)
-10.jpg                         | SK404XK      | SK40XK       | FAIL
-143.jpg                        | SO0665L      | SC0665       | FAIL
-181.jpg                        | STA5950A     | STA59504     | FAIL (Errors: A->4)
-35.jpg                         | L45H         | LA5H         | FAIL (Errors: 4->A)
-24.jpg                         | KR3UH61      | R3UH61       | FAIL
-82.jpg                         | SO6058G      | SO60586      | FAIL (Errors: G->6)
-46.jpg                         | SO8910X      | SO890X       | FAIL
-30.jpg                         | SZO6KU4      | SZ06KU4      | FAIL (Errors: O->0)
-2.jpg                          | SK028SE      | SK028SEI     | FAIL
-110.jpg                        | SLU7XA8      | LU           | FAIL
-118.jpg                        | SK5682A      | SK56824      | FAIL (Errors: A->4)
 138.jpg                        | SZO99CK      | SO99CK       | FAIL
-143(1).jpg                     | SO0665L      | SC0665       | FAIL
-114.jpg                        | SBE48JU      | SBE48        | FAIL
+35.jpg                         | L45H         | LA5H         | FAIL (Errors: 4->A)
+91.jpg                         | KOS0163G     | KOS01636     | FAIL (Errors: G->6)
+176.jpg                        | ST7736G      | ST77366      | FAIL (Errors: G->6)
+82.jpg                         | SO6058G      | SO60586      | FAIL (Errors: G->6)
 64.jpg                         | SBE2446G     | SBE24466     | FAIL (Errors: G->6)
 169.jpg                        | STAGA81      | STA6481      | FAIL (Errors: G->6, A->4)
-171.jpg                        | SCI2827J     | SC12827J     | FAIL (Errors: I->1)
-93.jpg                         | SMI98X8      | SM98X8       | FAIL
-106.jpg                        | SH9264A      | SH92644      | FAIL (Errors: A->4)
-108.jpg                        | SW58471      | SW5847       | FAIL
-124.jpg                        | SW55815      | SH55815      | FAIL (Errors: W->H)
-123.jpg                        | SK1067S      | SK10675      | FAIL (Errors: S->5)
-54.jpg                         | SZY71327     | JZY71327     | FAIL (Errors: S->J)
-119.jpg                        | SO6321W      |              | FAIL
-125.jpg                        | SBE1515G     | SBE15156     | FAIL (Errors: G->6)
-97.jpg                         | CB441ML      | CB44IML      | FAIL (Errors: 1->I)
-43.jpg                         | SK321LN      | SK321LN7     | FAIL
-176.jpg                        | ST7736G      | ST77366      | FAIL (Errors: G->6)
-112.jpg                        | SH9337C      | JH9337C      | FAIL (Errors: S->J)
-116.jpg                        | SO0773X      | 3X           | FAIL
-101.jpg                        | STA0461C     | OA61C        | FAIL
 115.jpg                        | CRY4R84      | RY4254       | FAIL
-144.jpg                        | STA1392C     | STA1392      | FAIL
+101.jpg                        | STA0461C     | OA61C        | FAIL
 65.jpg                         | SGLVN42      | SGLVNA2      | FAIL (Errors: 4->A)
+2.jpg                          | SK028SE      | SK028SEI     | FAIL
+118.jpg                        | SK5682A      | SK56824      | FAIL (Errors: A->4)
+102.jpg                        | SZA92043     | Z920431      | FAIL
+108.jpg                        | SW58471      | SW5847       | FAIL
+10.jpg                         | SK404XK      | SK40XK       | FAIL
+143(1).jpg                     | SO0665L      | SC0665       | FAIL
+46.jpg                         | SO8910X      | SO890X       | FAIL
+8.jpg                          | ST8936T      | ST89361      | FAIL (Errors: T->1)
+123.jpg                        | SK1067S      | SK10675      | FAIL (Errors: S->5)
+116.jpg                        | SO0773X      | 3X           | FAIL
+125.jpg                        | SBE1515G     | SBE15156     | FAIL (Errors: G->6)
+30.jpg                         | SZO6KU4      | SZ06KU4      | FAIL (Errors: O->0)
+154.jpg                        | SG2947W      | SG2947N      | FAIL (Errors: W->N)
+97.jpg                         | CB441ML      | CB44IML      | FAIL (Errors: 1->I)
+171.jpg                        | SCI2827J     | SC12827J     | FAIL (Errors: I->1)
+119.jpg                        | SO6321W      |              | FAIL
+181.jpg                        | STA5950A     | STA59504     | FAIL (Errors: A->4)
+12.jpg                         | SK293VV      |              | FAIL
+106.jpg                        | SH9264A      | SH92644      | FAIL (Errors: A->4)
+93.jpg                         | SMI98X8      | SM98X8       | FAIL
+54.jpg                         | SZY71327     | JZY71327     | FAIL (Errors: S->J)
+124.jpg                        | SW55815      | SH55815      | FAIL (Errors: W->H)
+110.jpg                        | SLU7XA8      | LU           | FAIL
+112.jpg                        | SH9337C      | JH9337C      | FAIL (Errors: S->J)
+43.jpg                         | SK321LN      | SK321LN7     | FAIL
+24.jpg                         | KR3UH61      | R3UH61       | FAIL
+114.jpg                        | SBE48JU      | SBE48        | FAIL
+143.jpg                        | SO0665L      | SC0665       | FAIL
+144.jpg                        | STA1392C     | STA1392      | FAIL
