@@ -1,0 +1,29 @@
+OCR ERROR LOG
+FILENAME                       | EXPECTED     | DETECTED     | STATUS
+--------------------------------------------------------------------------------
+116.jpg                        | SO0773X      | AA80103R     | FAIL
+169.jpg                        | STAGA81      | STA6481      | FAIL (Errors: G->6, A->4)
+82.jpg                         | SO6058G      | SO60586      | FAIL (Errors: G->6)
+102.jpg                        | SZA92043     | SZA2043      | FAIL
+138.jpg                        | SZO99CK      | SZO9CK       | FAIL
+143(1).jpg                     | SO0665L      | SC9665       | FAIL
+143.jpg                        | SO0665L      | SC9665       | FAIL
+56.jpg                         | KR466WV      | KR466HV      | FAIL (Errors: W->H)
+8.jpg                          | ST8936T      | ST89361      | FAIL (Errors: T->1)
+91.jpg                         | KOS0163G     | KOS01636     | FAIL (Errors: G->6)
+114.jpg                        | SBE48JU      | SBE48        | FAIL
+112.jpg                        | SH9337C      | JH9337C      | FAIL (Errors: S->J)
+192.jpg                        | SMY5HP6      | SMYSHP6      | FAIL (Errors: 5->S)
+101.jpg                        | STA0461C     | STA1C        | FAIL
+55.jpg                         | SK3694W      | SK3694H      | FAIL (Errors: W->H)
+108.jpg                        | SW58471      | SW5847       | FAIL
+144.jpg                        | STA1392C     | STA1392      | FAIL
+115.jpg                        | CRY4R84      | CRY254       | FAIL
+35.jpg                         | L45H         | LA5H         | FAIL (Errors: 4->A)
+123.jpg                        | SK1067S      | SK10675      | FAIL (Errors: S->5)
+119.jpg                        | SO6321W      | SO6          | FAIL
+10.jpg                         | SK404XK      | SK40XK       | FAIL
+6.jpg                          | SLU1VG6      | SLU1V66      | FAIL (Errors: G->6)
+110.jpg                        | SLU7XA8      | SLULU        | FAIL
+151.jpg                        | SG287AT      | SG2874T      | FAIL (Errors: A->4)
+12.jpg                         | SK293VV      | SK1          | FAIL
